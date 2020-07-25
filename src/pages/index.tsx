@@ -1,8 +1,11 @@
 import React from 'react'
 import { Link } from 'gatsby-material-ui-components'
-
-import Layout from '../components/Layout'
 import { PageProps } from 'gatsby'
+import Amplify from 'aws-amplify'
+import awsExports from '../aws-exports'
+import Layout from '../components/Layout'
+
+Amplify.configure(awsExports)
 
 const IndexPage: React.FC<PageProps> = (props: PageProps) => (
   <Layout pathname={props.path}>
