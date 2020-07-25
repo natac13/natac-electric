@@ -2,6 +2,7 @@ import React from 'react'
 
 // import Header from "./header"
 import SEO from './SEO'
+import Navbar from './Navbar'
 
 interface Props {
   pathname: string
@@ -17,6 +18,7 @@ const Layout: React.FC<Props> = (props: Props) => {
   return (
     <>
       <SEO pathname={pathname} />
+      {!noNavbar && <Navbar path={pathname} />}
       {/* <Header siteTitle={data.site.siteMetadata.title} /> */}
       <div
         style={{
