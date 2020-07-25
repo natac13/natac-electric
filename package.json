@@ -91,7 +91,7 @@
   "keywords": [
     "gatsby"
   ],
-  "license": "MIT",
+  "license": "0BSD",
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
       "npm run format",
