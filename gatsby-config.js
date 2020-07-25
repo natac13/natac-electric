@@ -4,7 +4,9 @@ const package = require('./package.json')
 module.exports = {
   siteMetadata: {
     title: `Natac Electric`,
-    description: `Example of an website landing page for an electrical company`,
+    description: `Example of an website landing page for an electrical company. Founded in 2020. Through hard labor and no retirement the work will get done.`,
+    address: '1234 Paper Street. City Province Country ZipCode',
+    phone: '555-555-1234',
     author: `Sean Paul Campbell`,
     email: `sean.campbell13@gmail.com`,
     version: `${package.version}`,

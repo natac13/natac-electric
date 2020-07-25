@@ -3,6 +3,7 @@ import React from 'react'
 // import Header from "./header"
 import SEO from './SEO'
 import Navbar from './Navbar'
+import Footer from './Footer'
 
 interface Props {
   pathname: string
@@ -28,12 +29,8 @@ const Layout: React.FC<Props> = (props: Props) => {
         }}
       >
         <main>{children}</main>
-        <footer>
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
-        </footer>
       </div>
+      <Footer />
     </>
   )
 }
