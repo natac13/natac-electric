@@ -1,19 +1,18 @@
 import React, { useContext } from 'react'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { Link, Button, IconButton } from 'gatsby-material-ui-components'
 import clsx from 'clsx'
 import {
   Hidden,
   AppBar,
   Toolbar,
-  Typography,
   Tooltip,
   BottomNavigation,
   BottomNavigationAction,
 } from '@material-ui/core'
 import Icon from '@mdi/react'
 import {
-  mdiAccountCircle,
+  // mdiAccountCircle,
   mdiGithub,
   mdiWhiteBalanceSunny,
   mdiBrightness3,
@@ -24,40 +23,48 @@ import {
 } from '@mdi/js'
 import ThemeContext from '../themes/themeContext'
 import { navigate } from 'gatsby'
+import useSite from '../hooks/use-site'
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    grow: {
-      flexGrow: 1,
+const useStyles = makeStyles((theme) => ({
+  grow: {
+    flexGrow: 1,
+  },
+  toolbar: {
+    display: 'flex',
+    position: 'relative',
+  },
+  title: {
+    display: 'flex',
+    flex: 1,
+  },
+  homeLink: {
+    textDecoration: 'none',
+    padding: theme.spacing(1),
+    '&:hover, &:focus': {
+      textDecoration: 'none',
+      textShadow: theme.shadows[10],
+      outline: `1px solid ${theme.palette.primary.main}`,
     },
-    toolbar: {
-      display: 'flex',
-      position: 'relative',
-    },
-    title: {
-      display: 'flex',
-      flex: 1,
-    },
-    mainNav: {
-      display: 'flex',
-      flex: 1,
-      justifyContent: 'space-around',
-    },
-    navLink: {},
-    iconsDesktop: {
-      display: 'flex',
-      flex: 1,
-      justifyContent: 'flex-end',
-    },
-    icon: {},
-    bottomNav: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-    },
-  })
-)
+  },
+  mainNav: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'space-around',
+  },
+  navLink: {},
+  iconsDesktop: {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  icon: {},
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+}))
 
 interface Props {
   path: string
@@ -65,6 +72,7 @@ interface Props {
 
 const Navbar: React.FC<Props> = (props: Props) => {
   const classes = useStyles()
+  const siteData = useSite()
   const { path } = props
   const { darkMode, setDarkMode } = useContext(ThemeContext)
 
@@ -72,11 +80,17 @@ const Navbar: React.FC<Props> = (props: Props) => {
     <div className={classes.grow}>
       <AppBar color="transparent" position="static">
         <Toolbar className={classes.toolbar}>
-          <Link to="/" className={classes.title}>
-            <Typography variant="h6" noWrap color="textPrimary">
-              Natac Electric
-            </Typography>
-          </Link>
+          <div className={classes.title}>
+            <Link
+              variant="h6"
+              noWrap
+              color="textPrimary"
+              to="/"
+              className={classes.homeLink}
+            >
+              {siteData.siteMetadata.title}
+            </Link>
+          </div>
           <Hidden xsDown>
             <nav className={classes.mainNav} id="main-nav">
               <Button
@@ -117,34 +131,14 @@ const Navbar: React.FC<Props> = (props: Props) => {
                 <Icon path={mdiLoginVariant} size={1} />
               </IconButton>
             </Tooltip>
-            {/* <Tooltip arrow placement="bottom" title="Github">
+            <Tooltip arrow placement="bottom" title="Github">
               <IconButton
                 className={classes.icon}
-                // href={data.site.siteMetadata.siteGithub}
+                to={siteData.siteMetadata.siteGithub}
               >
                 <Icon path={mdiGithub} size={1} />
               </IconButton>
-            </Tooltip> */}
-            {/* <Tooltip arrow placement="bottom" title="LinkedIn">
-                <IconButton
-                  className={classes.icon}
-                  href={data.site.siteMetadata.authorLinkedIn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Linkedin />
-                </IconButton>
-              </Tooltip> */}
-            {/* <Tooltip arrow placement="bottom" title="Demo App">
-                <IconButton
-                  className={classes.icon}
-                  href="http://demo.certground.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExitToApp />
-                </IconButton>
-              </Tooltip> */}
+            </Tooltip>
           </nav>
         </Toolbar>
       </AppBar>

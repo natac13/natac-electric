@@ -5,6 +5,7 @@ interface SiteMetadata {
   version: string
   author: string
   email: string
+  siteGithub: string
 }
 
 interface Site {
@@ -25,6 +26,7 @@ export default (): Site => {
           version
           author
           email
+          siteGithub
         }
         buildTime(formatString: "YYYY-MM-DD")
       }

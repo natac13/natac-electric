@@ -8,6 +8,7 @@ module.exports = {
     author: `Sean Paul Campbell`,
     email: `sean.campbell13@gmail.com`,
     version: `${package.version}`,
+    siteGithub: package.repository.url,
   },
   mapping: {
     'MarkdownRemark.frontmatter.author': `Sean Paul Campbell`,
