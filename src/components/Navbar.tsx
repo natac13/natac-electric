@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Link, Button, IconButton } from 'gatsby-material-ui-components'
 import clsx from 'clsx'
@@ -9,6 +9,9 @@ import {
   Tooltip,
   BottomNavigation,
   BottomNavigationAction,
+  Menu,
+  MenuItem,
+  Divider,
 } from '@material-ui/core'
 import Icon from '@mdi/react'
 import {
@@ -20,10 +23,18 @@ import {
   mdiInformation,
   mdiAt,
   mdiLoginVariant,
+  mdiExitToApp,
+  mdiLogoutVariant,
+  mdiMenu,
+  mdiAccount,
+  mdiAccountOutline,
+  mdiAccountCircleOutline,
 } from '@mdi/js'
 import ThemeContext from '../themes/themeContext'
 import { navigate } from 'gatsby'
 import useSite from '../hooks/use-site'
+import { logout, isLoggedIn } from '../services/auth'
+import { Auth } from 'aws-amplify'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -74,7 +85,79 @@ const Navbar: React.FC<Props> = (props: Props) => {
   const classes = useStyles()
   const siteData = useSite()
   const { path } = props
+  const [accountMenuAnchorEl, setAccountMenuAnchorEl] = useState(null)
+  const isAccountMenuOpen = Boolean(accountMenuAnchorEl)
+  const handleAccountMenuClose = () => {
+    setAccountMenuAnchorEl(null)
+  }
+
+  const handleAccountMenuOpen = (event) => {
+    setAccountMenuAnchorEl(event.currentTarget)
+  }
+  const accountMenuId = 'account-menu'
+  const [stage, setStage] = useState<0 | 1>(0)
   const { darkMode, setDarkMode } = useContext(ThemeContext)
+
+  const renderAccountMenu = (
+    <Menu
+      classes={{
+        paper: classes.mobileMenu,
+      }}
+      id={accountMenuId}
+      onClose={handleAccountMenuClose}
+      open={isAccountMenuOpen}
+      anchorEl={accountMenuAnchorEl}
+      keepMounted
+      getContentAnchorEl={null}
+      elevation={0}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+    >
+      <MenuItem
+        component={Link}
+        to="/app/profile"
+        onClick={handleAccountMenuClose}
+      >
+        {/* <IconButton>
+          <ChevronIcon />
+        </IconButton> */}
+        <p>User Profile</p>
+      </MenuItem>
+      <Divider />
+      <MenuItem
+        // component={Link}
+        // to="/app/profile"
+        onClick={async () => {
+          handleAccountMenuClose()
+          logout(() => navigate('/app/login'))
+        }}
+      >
+        {/* <IconButton>
+          <ChevronIcon />
+        </IconButton> */}
+        <p>Logout</p>
+      </MenuItem>
+      {/* <MenuItem className={classes.mobileDarkModeToggle}>
+        <FormControlLabel
+          control={
+            <Switch
+              aria-label={'Toggle Color mode'}
+              onClick={() => setDarkMode(!darkMode)}
+              checked={darkMode}
+            />
+          }
+          label={darkMode ? 'Dark Mode' : 'Light Mode'}
+        />
+      </MenuItem>
+      <Divider /> */}
+    </Menu>
+  )
 
   return (
     <div className={classes.grow}>
@@ -126,11 +209,22 @@ const Navbar: React.FC<Props> = (props: Props) => {
                 )}
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement="bottom" title="Employee Login">
-              <IconButton className={classes.icon}>
-                <Icon path={mdiLoginVariant} size={1} />
-              </IconButton>
-            </Tooltip>
+            {isLoggedIn() ? (
+              <Tooltip arrow placement="bottom" title="User Account">
+                <IconButton
+                  className={classes.icon}
+                  onClick={handleAccountMenuOpen}
+                >
+                  <Icon path={mdiAccountCircleOutline} size={1} />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip arrow placement="bottom" title="Employee Login">
+                <IconButton className={classes.icon} to="/app/login">
+                  <Icon path={mdiLoginVariant} size={1} />
+                </IconButton>
+              </Tooltip>
+            )}
             <Tooltip arrow placement="bottom" title="Github">
               <IconButton
                 className={classes.icon}
@@ -168,6 +262,7 @@ const Navbar: React.FC<Props> = (props: Props) => {
           />
         </BottomNavigation>
       </Hidden>
+      {renderAccountMenu}
     </div>
   )
 }
