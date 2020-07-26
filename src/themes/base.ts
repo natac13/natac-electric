@@ -9,14 +9,6 @@ export default {
         color: 'none',
       },
     },
-    MuiSnackbarContent: {
-      root: {
-        '&[class*="variantWarning"]': {
-          color: 'rgba(0, 0, 0, 0.87)',
-        },
-        // .. etc for other variants
-      },
-    },
   },
   // typography: {
   //   fontFamily: ['Roboto', 'Helvetica', 'Arial', 'sans-serif'].join(','),
