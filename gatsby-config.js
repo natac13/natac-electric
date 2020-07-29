@@ -45,6 +45,11 @@ module.exports = {
             subsets: [`latin`],
             variants: [`300`, `400`, `400i`, `500`, `700`, `700i`],
           },
+          {
+            family: `Merriweather`,
+            subsets: [`latin`],
+            variants: [`400`, `400i`, `700`, `900`],
+          },
         ],
       },
     },

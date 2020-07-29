@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    height: '100vh',
   },
   hidden: {
     display: 'none',

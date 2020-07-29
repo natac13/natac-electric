@@ -13,10 +13,16 @@ import { Link } from 'gatsby-material-ui-components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    paddingTop: theme.spacing(2),
+    padding: theme.spacing(2, 2),
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'center',
+    zIndex: 10,
+    background: theme.palette.background.default,
+    position: 'absolute',
+    // bottom: 'min-content',
+    left: 0,
+    right: 0,
   },
   sectionWrapper: {
     display: 'flex',
@@ -34,7 +40,10 @@ const useStyles = makeStyles((theme) => ({
   },
   copyright: {
     alignSelf: 'center',
-    margin: theme.spacing(1, 0),
+    margin: theme.spacing(1, 0, 9),
+    [`${theme.breakpoints.up('sm')}`]: {
+      margin: theme.spacing(1, 0, 2),
+    },
   },
 }))
 
