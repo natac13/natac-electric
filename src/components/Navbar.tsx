@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'fixed',
     top: 0,
     width: '100%',
-    background: theme.palette.background.paper,
+    background: theme.palette.background.default,
     borderBottom: `1px solid ${theme.palette.common.black}`,
   },
   nav: {

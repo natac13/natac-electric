@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 
 // import Header from "./header"
 import SEO from './SEO'
@@ -6,9 +6,15 @@ import Navbar from './Navbar'
 import Footer from './Footer'
 import { makeStyles } from '@material-ui/core'
 import SnackbarProviderComponent from './SnackbarProvider'
-import { useSpring, animated, useTransition } from 'react-spring'
+import { useSpring, animated } from 'react-spring'
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    background:
+      theme.palette.type === 'light'
+        ? theme.palette.grey[200]
+        : theme.palette.background.paper,
+  },
   main: {
     margin: `0`,
     height: '100vh',
@@ -34,7 +40,7 @@ const Layout: React.FC<Props> = (props: Props) => {
   const { children, noNavbar = false, noMenu = false, pathname } = props
 
   return (
-    <>
+    <div className={classes.root}>
       <SnackbarProviderComponent>
         <SEO pathname={pathname} />
         {!noNavbar && <Navbar path={pathname} setMainSpring={setMainSpring} />}
@@ -42,9 +48,9 @@ const Layout: React.FC<Props> = (props: Props) => {
         <animated.main className={classes.main} style={mainSpring}>
           {children}
         </animated.main>
-        {/* <Footer /> */}
+        {pathname === '/' ? null : <Footer />}
       </SnackbarProviderComponent>
-    </>
+    </div>
   )
 }
 

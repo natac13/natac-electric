@@ -1,10 +1,14 @@
 import { makeStyles, Typography, useTheme } from '@material-ui/core'
-import { mdiChevronDoubleDown } from '@mdi/js'
+import {
+  mdiChevronDoubleDown,
+  mdiCheckboxBlankCircleOutline,
+  mdiCheckboxBlankCircle,
+} from '@mdi/js'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
 import { graphql, useStaticQuery } from 'gatsby'
 import Img from 'gatsby-image'
-import { Link } from 'gatsby-material-ui-components'
+import { Link, IconButton } from 'gatsby-material-ui-components'
 import debounce from 'lodash/debounce'
 import R from 'ramda'
 import React, {
@@ -24,8 +28,6 @@ import SwipeableViews from 'react-swipeable-views'
 import { bindKeyboard } from 'react-swipeable-views-utils'
 import titleSvg from '../assets/svg/title.svg'
 import title2Svg from '../assets/svg/title2.svg'
-import useIsDesktop from '../hooks/useIsDesktop'
-import useIsMobile from '../hooks/useIsMobile'
 import { fontFamilySerif } from '../themes'
 import ThemeContext from '../themes/themeContext'
 
@@ -53,16 +55,20 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '16vh',
   },
   page3: {
-    color: theme.palette.text.primary,
+    color: theme.palette.background.default,
     display: 'flex',
     flexFlow: 'column',
     paddingTop: '16vh',
   },
   page4: {
-    color: theme.palette.text.primary,
+    color: theme.palette.background.default,
     display: 'flex',
     flexFlow: 'column',
     paddingTop: '16vh',
+    // backgroundImage: `url(${bg4})`,
+    // backgroundSize: 'cover',
+    // backgroundRepeat: 'no-repeat',
+    // filter: `brightness(0.3)`,
   },
   title: {
     width: '88vw',
@@ -73,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
       width: '72vw',
     },
     [`${theme.breakpoints.up('md')}`]: {
+      transform: 'translateY(0vh)',
       width: '60vw',
     },
     [`${theme.breakpoints.up('lg')}`]: {
@@ -90,10 +97,10 @@ const useStyles = makeStyles((theme) => ({
     transform: 'translateX(-50%)',
     width: 'max-content',
     [`${theme.breakpoints.up('sm')}`]: {
-      fontSize: theme.typography.h5.fontSize,
+      fontSize: theme.typography.h6.fontSize,
     },
     [`${theme.breakpoints.up('lg')}`]: {
-      fontSize: theme.typography.h4.fontSize,
+      fontSize: theme.typography.h5.fontSize,
     },
   },
   verticalBar: {
@@ -128,6 +135,9 @@ const useStyles = makeStyles((theme) => ({
     '&.page3': {
       color: theme.palette.getContrastText(theme.palette.text.primary),
     },
+    '&.page4': {
+      color: theme.palette.text.primary,
+    },
   },
   pageNumberBar: {
     borderTop: `1px solid ${theme.palette.text.primary}`,
@@ -143,6 +153,9 @@ const useStyles = makeStyles((theme) => ({
       borderTop: `1px solid ${theme.palette.getContrastText(
         theme.palette.text.primary
       )}`,
+    },
+    '&.page4': {
+      borderTop: `1px solid ${theme.palette.text.primary}`,
     },
   },
   hidden: {
@@ -164,6 +177,9 @@ const useStyles = makeStyles((theme) => ({
     },
     '&.page3': {
       color: theme.palette.getContrastText(theme.palette.text.primary),
+    },
+    '&.page4': {
+      color: theme.palette.text.primary,
     },
   },
   pageContent: {
@@ -192,6 +208,9 @@ const useStyles = makeStyles((theme) => ({
     '&.page3': {
       borderColor: theme.palette.getContrastText(theme.palette.text.primary),
     },
+    '&.page4': {
+      borderColor: theme.palette.text.primary,
+    },
   },
   pageContentText: {
     ...theme.typography.body1,
@@ -202,6 +221,9 @@ const useStyles = makeStyles((theme) => ({
     },
     '&.page3': {
       color: theme.palette.getContrastText(theme.palette.text.primary),
+    },
+    '&.page4': {
+      color: theme.palette.text.primary,
     },
     [`${theme.breakpoints.up('sm')}`]: {
       fontSize: theme.typography.h6.fontSize,
@@ -221,11 +243,55 @@ const useStyles = makeStyles((theme) => ({
       width: '50%',
     },
   },
+  dots: {
+    position: 'fixed',
+    top: '50%',
+    right: '2vw',
+    transform: 'translateY(-50%)',
+    display: 'flex',
+    flexFlow: 'column',
+    height: '15vh',
+    justifyContent: 'space-around',
+    '& svg': {
+      color: theme.palette.common.white,
+    },
+    '&.page2 svg': {
+      color: theme.palette.common.white,
+    },
+    '&.page3 svg': {
+      color: theme.palette.getContrastText(theme.palette.text.primary),
+    },
+    '&.page4 svg': {
+      color: theme.palette.text.primary,
+    },
+  },
 }))
 
 interface Props {}
 
 let clientY: number
+
+const pages = [
+  {
+    title: `Strong History.`,
+    link: `/about/#history`,
+    text: `Established in 1951. Proudly serving the London Ontario Community for ${
+      new Date().getFullYear() - 1951
+    } years.`,
+  },
+  {
+    title: `More than Lights.`,
+    link: `/services`,
+    text: `We offer licensed electrical services in residential, commercial and the industrial sectors. From home automation to industrial machine wiring, we've got your back! And don't worry we won't tell anyone you're afraid of the dark.`,
+  },
+  {
+    title: `Dedicated Team.`,
+    link: `/about/#team`,
+    text: `Being in business for ${
+      new Date().getFullYear() - 1951
+    } our company has learned the value of great team members, those Electricians that show up each day and give it their all. We thank and treasure each member who has been, is, and will be, apart of our team.`,
+  },
+]
 /* https://codesandbox.io/s/react-spring-usetrail-example-with-text-wv8g9 */
 const Landing: React.FC<Props> = (props: Props) => {
   const classes = useStyles()
@@ -316,7 +382,7 @@ const Landing: React.FC<Props> = (props: Props) => {
     (e: React.WheelEvent) => {
       const up = e.deltaY > 0
       if (up) {
-        throttledSetPage(R.min(page + 1, 3))
+        throttledSetPage(R.min(page + 1, pages.length))
       } else {
         throttledSetPage(R.max(page - 1, 0))
       }
@@ -377,7 +443,7 @@ const Landing: React.FC<Props> = (props: Props) => {
           const deltaY = e.changedTouches[0].clientY - clientY
           const up = deltaY < 0
           if (up) {
-            throttledSetPage(R.min(page + 1, 3))
+            throttledSetPage(R.min(page + 1, pages.length))
           } else if (deltaY === 0) {
           } else {
             throttledSetPage(R.max(page - 1, 0))
@@ -428,70 +494,47 @@ const Landing: React.FC<Props> = (props: Props) => {
           />
         </section>
 
-        <section className={clsx(classes.hero, classes.page2)}>
-          <Link
-            className={clsx(classes.pageTitle, 'page2')}
-            to="/about/#history"
-            underline="none"
+        {pages.map((pd, i) => (
+          <section
+            className={clsx(classes.hero, classes[`page${i + 2}`])}
+            key={i}
           >
-            Strong History.
-          </Link>
-          <div className={clsx(classes.pageContent, 'page2')}>
-            <hr className={clsx(classes.pageContentBar, 'page2')} />
-            <Typography className={clsx(classes.pageContentText, 'page2')}>
-              {`Established in 1951. Proudly serving the London Ontario Community for ${
-                new Date().getFullYear() - 1951
-              } years.`}
-            </Typography>
-            <Img
-              fluid={data.page2.childImageSharp.fluid}
-              className={clsx(classes.pageImage, 'page2')}
-            />
-          </div>
-        </section>
-
-        <section className={clsx(classes.hero, classes.page3)}>
-          <Link
-            className={clsx(classes.pageTitle, 'page3')}
-            to="/services"
-            underline="none"
-          >
-            Our Services.
-          </Link>
-          <div className={clsx(classes.pageContent, 'page3')}>
-            <hr className={clsx(classes.pageContentBar, 'page3')} />
-            <Typography className={clsx(classes.pageContentText, 'page3')}>
-              {`We offer licensed electrical services in residential, commercial and the industrial sectors. From home automation to industrial machine wiring, we've got your back! And don't worry we won't tell anyone you're afraid of the dark.`}
-            </Typography>
-            <Img
-              fluid={data.page3.childImageSharp.fluid}
-              className={clsx(classes.pageImage)}
-            />
-          </div>
-        </section>
-
-        <section className={clsx(classes.hero, classes.page4)}>
-          <Link
-            className={clsx(classes.pageTitle, 'page4')}
-            to="/about/#team"
-            underline="none"
-          >
-            Dedicated Team.
-          </Link>
-          <div className={clsx(classes.pageContent, 'page4')}>
-            <hr className={clsx(classes.pageContentBar, 'page4')} />
-            <Typography className={clsx(classes.pageContentText, 'page4')}>
-              {`Being in business for ${
-                new Date().getFullYear() - 1951
-              } our company has learned the value of great team members, those Electricians that show up each day and give it their all. We thank and treasure each member who has been, is, and will be, apart of our team.`}
-            </Typography>
-            <Img
-              fluid={data.page4.childImageSharp.fluid}
-              className={clsx(classes.pageImage)}
-            />
-          </div>
-        </section>
+            <Link
+              className={clsx(classes.pageTitle, `page${i + 2}`)}
+              to={pd.link}
+              underline="none"
+            >
+              {pd.title}
+            </Link>
+            <div className={clsx(classes.pageContent, `page${i + 2}`)}>
+              <hr className={clsx(classes.pageContentBar, `page${i + 2}`)} />
+              <Typography
+                className={clsx(classes.pageContentText, `page${i + 2}`)}
+              >
+                {pd.text}
+              </Typography>
+              <Img
+                fluid={data[`page${i + 2}`].childImageSharp.fluid}
+                className={clsx(classes.pageImage, `page${i + 2}`)}
+              />
+            </div>
+          </section>
+        ))}
       </BindKeyboardSwipeableViews>
+      <div className={clsx(classes.dots, `page${page + 1}`)}>
+        {[...Array(pages.length + 1)].map((_, i) => (
+          <IconButton key={i} onClick={() => throttledSetPage(i)}>
+            <Icon
+              path={
+                i === page
+                  ? mdiCheckboxBlankCircle
+                  : mdiCheckboxBlankCircleOutline
+              }
+              size={0.75}
+            />
+          </IconButton>
+        ))}
+      </div>
     </animated.section>
   )
 }
