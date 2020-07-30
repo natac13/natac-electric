@@ -4,6 +4,7 @@ import {
   mdiCheckboxBlankCircleOutline,
   mdiCheckboxBlankCircle,
 } from '@mdi/js'
+import { useDeepCompareCallback } from 'use-deep-compare'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
 import { graphql, useStaticQuery } from 'gatsby'
@@ -11,13 +12,8 @@ import Img from 'gatsby-image'
 import { Link, IconButton } from 'gatsby-material-ui-components'
 import debounce from 'lodash/debounce'
 import R from 'ramda'
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import useLocalStorageState from 'use-local-storage-state'
+import React, { useContext, useEffect, useMemo } from 'react'
 import {
   animated,
   config as rsConfig,
@@ -334,7 +330,7 @@ const Landing: React.FC<Props> = (props: Props) => {
       }
     }
   `)
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useLocalStorageState('landingPageSection', 0)
 
   const fadeTransitions = useTransition(page !== 0, null, {
     from: { opacity: 0 },
@@ -363,7 +359,7 @@ const Landing: React.FC<Props> = (props: Props) => {
     ]
   )
 
-  const throttledSetPage = useCallback(
+  const throttledSetPage = useDeepCompareCallback(
     debounce(
       (page: number) => {
         setFadeColor({ background: pageColorMap[page] })
@@ -378,7 +374,7 @@ const Landing: React.FC<Props> = (props: Props) => {
     [page, setPage, setFadeColor, pageColorMap]
   )
 
-  const onScroll = useCallback(
+  const onScroll = useDeepCompareCallback(
     (e: React.WheelEvent) => {
       const up = e.deltaY > 0
       if (up) {
@@ -388,6 +384,35 @@ const Landing: React.FC<Props> = (props: Props) => {
       }
     },
     [throttledSetPage, page]
+  )
+
+  const onSwitch = useDeepCompareCallback(
+    (page, stage) => {
+      const pageNumber = +R.compose<number, string, string[], string>(
+        R.head,
+        R.split('.'),
+        R.toString
+      )(page)
+      const percentOfPageChange = +R.compose(
+        R.join(''),
+        R.prepend('.'),
+        R.last,
+        R.split('.'),
+        R.toString
+      )(page)
+
+      if (stage === 'end') {
+        return setFadeColor({
+          background: pageColorMap[pageNumber],
+          opacity: 1,
+        })
+      }
+      setFadeColor({
+        opacity: 1 - percentOfPageChange,
+        background: pageColorMap[pageNumber],
+      })
+    },
+    [setFadeColor, pageColorMap]
   )
 
   useEffect(() => {
@@ -451,46 +476,22 @@ const Landing: React.FC<Props> = (props: Props) => {
         }}
         onWheel={onScroll}
         threshold={1}
-        onSwitching={(page, stage) => {
-          const pageNumber = +R.compose<number, string, string[], string>(
-            R.head,
-            R.split('.'),
-            R.toString
-          )(page)
-          if (stage === 'end') {
-            return setFadeColor({
-              background: pageColorMap[pageNumber],
-              opacity: 1,
-            })
-          }
-          const opacity = R.compose(
-            R.join(''),
-            R.prepend('.'),
-            R.last,
-            R.split('.'),
-            R.toString
-          )(page)
-          setFadeColor({
-            opacity: 1 - +opacity,
-            background: pageColorMap[pageNumber],
-          })
-        }}
         enableMouseEvents
+        onSwitching={onSwitch}
       >
         <section className={classes.hero}>
-          <animated.img
-            // style={titleSpring}
+          <img
             src={darkMode ? titleSvg : title2Svg}
             alt={data.site.siteMetadata.title}
             className={classes.title}
           />
           <Typography variant="body2" className={classes.intro}>
-            See what we do.
+            Discover more.
           </Typography>
           <Icon
             className={classes.verticalBar}
             path={mdiChevronDoubleDown}
-            size={2}
+            size={1.5}
           />
         </section>
 
@@ -521,20 +522,30 @@ const Landing: React.FC<Props> = (props: Props) => {
           </section>
         ))}
       </BindKeyboardSwipeableViews>
-      <div className={clsx(classes.dots, `page${page + 1}`)}>
-        {[...Array(pages.length + 1)].map((_, i) => (
-          <IconButton key={i} onClick={() => throttledSetPage(i)}>
-            <Icon
-              path={
-                i === page
-                  ? mdiCheckboxBlankCircle
-                  : mdiCheckboxBlankCircleOutline
-              }
-              size={0.75}
-            />
-          </IconButton>
-        ))}
-      </div>
+
+      {fadeTransitions.map(
+        ({ item, key, props }) =>
+          item && (
+            <animated.div
+              key={key}
+              className={clsx(classes.dots, `page${page + 1}`)}
+              style={props}
+            >
+              {[...Array(pages.length + 1)].map((_, i) => (
+                <IconButton key={i} onClick={() => throttledSetPage(i)}>
+                  <Icon
+                    path={
+                      i === page
+                        ? mdiCheckboxBlankCircle
+                        : mdiCheckboxBlankCircleOutline
+                    }
+                    size={0.75}
+                  />
+                </IconButton>
+              ))}
+            </animated.div>
+          )
+      )}
     </animated.section>
   )
 }

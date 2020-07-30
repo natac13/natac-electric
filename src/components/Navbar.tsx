@@ -160,6 +160,39 @@ interface Props {
   setMainSpring: SetUpdateFn<React.CSSProperties>
 }
 
+const links = [
+  {
+    key: 'nav-home',
+    link: '/',
+    mainText: 'Home.',
+    subText: 'Welcome page.',
+  },
+  {
+    key: 'nav-service',
+    link: '/services',
+    mainText: 'Services.',
+    subText: 'What we do.',
+  },
+  {
+    key: 'nav-about',
+    link: '/about',
+    mainText: 'About.',
+    subText: 'Who we are.',
+  },
+  {
+    key: 'nav-contact',
+    link: '/contact',
+    mainText: 'Contact.',
+    subText: 'Get in touch.',
+  },
+  {
+    key: 'nav-login',
+    link: '/app/login',
+    mainText: 'Login.',
+    subText: 'For employees.',
+  },
+]
+
 const Navbar: React.FC<Props> = (props: Props) => {
   const classes = useStyles()
   const isMobile = useIsMobile()
@@ -191,67 +224,23 @@ const Navbar: React.FC<Props> = (props: Props) => {
     <div>
       <animated.div className={classes.root} style={navSpring}>
         <List component="nav" className={classes.nav}>
-          <ListItem
-            className={classes.navLink}
-            component={Link}
-            underline="none"
-            color="textPrimary"
-            to="/"
-          >
-            <Typography className={classes.navText}>Home.</Typography>
-            <hr className={classes.horizontal} />
-            <Typography className={classes.navSubText}>
-              Welcome page.
-            </Typography>
-          </ListItem>
-          <ListItem
-            className={classes.navLink}
-            component={Link}
-            underline="none"
-            color="textPrimary"
-            to="/services"
-          >
-            <Typography className={classes.navText}>Services.</Typography>
-            <hr className={classes.horizontal} />
-            <Typography className={classes.navSubText}>What we do.</Typography>
-          </ListItem>
-          <ListItem
-            className={classes.navLink}
-            component={Link}
-            underline="none"
-            color="textPrimary"
-            to="/about"
-          >
-            <Typography className={classes.navText}>About.</Typography>
-            <hr className={classes.horizontal} />
-            <Typography className={classes.navSubText}>Who we are.</Typography>
-          </ListItem>
-          <ListItem
-            className={classes.navLink}
-            component={Link}
-            underline="none"
-            color="textPrimary"
-            to="/contact"
-          >
-            <Typography className={classes.navText}>Contact.</Typography>
-            <hr className={classes.horizontal} />
-            <Typography className={classes.navSubText}>
-              Get in touch.
-            </Typography>
-          </ListItem>
-          <ListItem
-            className={classes.navLink}
-            component={Link}
-            underline="none"
-            color="textPrimary"
-            to="/app/login"
-          >
-            <Typography className={classes.navText}>Login.</Typography>
-            <hr className={classes.horizontal} />
-            <Typography className={classes.navSubText}>
-              For employees.
-            </Typography>
-          </ListItem>
+          {links.map((ld) => (
+            <ListItem
+              key={ld.key}
+              className={classes.navLink}
+              component={Link}
+              underline="none"
+              color="textPrimary"
+              to={ld.link}
+            >
+              <Typography className={classes.navText}>{ld.mainText}</Typography>
+              <hr className={classes.horizontal} />
+              <Typography className={classes.navSubText}>
+                {ld.subText}
+              </Typography>
+            </ListItem>
+          ))}
+
           <ListItem className={clsx(classes.navLink, classes.darkToggle)}>
             <label htmlFor="colorMode" className={classes.navText}>
               Color Theme.
