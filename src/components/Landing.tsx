@@ -1,31 +1,23 @@
 import { makeStyles, Typography, useTheme } from '@material-ui/core'
 import {
-  mdiChevronDoubleDown,
-  mdiCheckboxBlankCircleOutline,
   mdiCheckboxBlankCircle,
+  mdiCheckboxBlankCircleOutline,
+  mdiChevronDoubleDown,
 } from '@mdi/js'
-import { useDeepCompareCallback } from 'use-deep-compare'
 import Icon from '@mdi/react'
 import clsx from 'clsx'
 import { graphql, useStaticQuery } from 'gatsby'
-import Img from 'gatsby-image'
-import { Link, IconButton } from 'gatsby-material-ui-components'
+import BackgroundImage from 'gatsby-background-image'
+import { IconButton, Link } from 'gatsby-material-ui-components'
 import debounce from 'lodash/debounce'
 import R from 'ramda'
-import useLocalStorageState from 'use-local-storage-state'
-import React, { useContext, useEffect, useMemo } from 'react'
-import {
-  animated,
-  config as rsConfig,
-  useSpring,
-  useTransition,
-} from 'react-spring'
+import React, { useState } from 'react'
+import { animated, config as rsConfig, useTransition } from 'react-spring'
 import SwipeableViews from 'react-swipeable-views'
 import { bindKeyboard } from 'react-swipeable-views-utils'
+import { useDeepCompareCallback } from 'use-deep-compare'
 import titleSvg from '../assets/svg/title.svg'
-import title2Svg from '../assets/svg/title2.svg'
 import { fontFamilySerif } from '../themes'
-import ThemeContext from '../themes/themeContext'
 
 const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews)
 
@@ -33,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   wrapper: {
     position: 'relative',
     height: '100vh',
+    width: '100vw',
     overflow: 'hidden',
     marginBottom: theme.spacing(100),
     zIndex: -1,
@@ -61,10 +54,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexFlow: 'column',
     paddingTop: '16vh',
-    // backgroundImage: `url(${bg4})`,
-    // backgroundSize: 'cover',
-    // backgroundRepeat: 'no-repeat',
-    // filter: `brightness(0.3)`,
   },
   title: {
     width: '88vw',
@@ -83,11 +72,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   intro: {
-    color: theme.palette.getContrastText(theme.palette.text.primary),
+    color: `rgba(0, 0, 0, .87)`,
     fontFamily: fontFamilySerif,
     fontSize: theme.typography.h6.fontSize,
     position: 'absolute',
-    bottom: theme.spacing(5),
+    bottom: theme.spacing(10),
     left: '50%',
     right: '50%',
     transform: 'translateX(-50%)',
@@ -100,22 +89,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   verticalBar: {
-    // width: '1px',
-    // height: theme.spacing(6),
-    // backgroundColor: theme.palette.common.black,
-    color: theme.palette.getContrastText(theme.palette.text.primary),
+    color: `rgba(0, 0, 0, .87)`,
     position: 'absolute',
-    bottom: theme.spacing(0),
+    bottom: theme.spacing(5),
     left: '50%',
     right: '50%',
     transform: 'translateX(-50%)',
   },
   pageNumber: {
     zIndex: 100,
-    // color: theme.palette.text.primary,
     position: 'absolute',
     marginTop: '16vh',
-    // width: '88vw',
     marginLeft: '6vw',
     marginRight: 'auto',
     display: 'flex',
@@ -129,16 +113,15 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.white,
     },
     '&.page3': {
-      color: theme.palette.getContrastText(theme.palette.text.primary),
+      color: theme.palette.common.white,
     },
     '&.page4': {
-      color: theme.palette.text.primary,
+      color: theme.palette.common.white,
     },
   },
   pageNumberBar: {
     borderTop: `1px solid ${theme.palette.text.primary}`,
     display: 'inline-block',
-    // height: '4px',
     marginLeft: theme.spacing(1),
     transform: `translateY(50%)`,
     width: theme.spacing(8),
@@ -146,12 +129,10 @@ const useStyles = makeStyles((theme) => ({
       borderTop: `1px solid ${theme.palette.common.white}`,
     },
     '&.page3': {
-      borderTop: `1px solid ${theme.palette.getContrastText(
-        theme.palette.text.primary
-      )}`,
+      borderTop: `1px solid ${theme.palette.common.white}`,
     },
     '&.page4': {
-      borderTop: `1px solid ${theme.palette.text.primary}`,
+      borderTop: `1px solid ${theme.palette.common.white}`,
     },
   },
   hidden: {
@@ -164,18 +145,18 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.h3.fontSize,
     fontWeight: 700,
     color: theme.palette.text.primary,
-    marginTop: '5vh',
+    marginTop: '1vh',
     marginRight: 'auto',
+    marginBottom: '1vh',
     marginLeft: '6vw',
-    marginBottom: '4vh',
     '&.page2': {
       color: theme.palette.common.white,
     },
     '&.page3': {
-      color: theme.palette.getContrastText(theme.palette.text.primary),
+      color: theme.palette.common.white,
     },
     '&.page4': {
-      color: theme.palette.text.primary,
+      color: theme.palette.common.white,
     },
   },
   pageContent: {
@@ -187,11 +168,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexFlow: 'column',
     height: '100%',
-    '&.page4': {
-      [`${theme.breakpoints.up('lg')}`]: {
-        // flexFlow: 'row',
-      },
-    },
   },
   pageContentBar: {
     width: theme.spacing(18),
@@ -202,10 +178,10 @@ const useStyles = makeStyles((theme) => ({
       borderColor: theme.palette.common.white,
     },
     '&.page3': {
-      borderColor: theme.palette.getContrastText(theme.palette.text.primary),
+      borderColor: theme.palette.common.white,
     },
     '&.page4': {
-      borderColor: theme.palette.text.primary,
+      borderColor: theme.palette.common.white,
     },
   },
   pageContentText: {
@@ -216,10 +192,10 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.white,
     },
     '&.page3': {
-      color: theme.palette.getContrastText(theme.palette.text.primary),
+      color: theme.palette.common.white,
     },
     '&.page4': {
-      color: theme.palette.text.primary,
+      color: theme.palette.common.white,
     },
     [`${theme.breakpoints.up('sm')}`]: {
       fontSize: theme.typography.h6.fontSize,
@@ -248,6 +224,7 @@ const useStyles = makeStyles((theme) => ({
     flexFlow: 'column',
     height: '15vh',
     justifyContent: 'space-around',
+    zIndex: theme.zIndex.appBar,
     '& svg': {
       color: theme.palette.common.white,
     },
@@ -255,10 +232,18 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.common.white,
     },
     '&.page3 svg': {
-      color: theme.palette.getContrastText(theme.palette.text.primary),
+      color: theme.palette.common.white,
     },
     '&.page4 svg': {
-      color: theme.palette.text.primary,
+      color: theme.palette.common.white,
+    },
+  },
+  bgImage: {
+    width: '100%',
+    height: '100%',
+    filter: `brightness(0.7)`,
+    '&.page1': {
+      filter: 'unset',
     },
   },
 }))
@@ -292,16 +277,8 @@ const pages = [
 const Landing: React.FC<Props> = (props: Props) => {
   const classes = useStyles()
   const theme = useTheme()
-  const { darkMode } = useContext(ThemeContext)
   const data = useStaticQuery(graphql`
     query {
-      hero: file(name: { eq: "callum-shaw" }) {
-        childImageSharp {
-          fluid {
-            ...GatsbyImageSharpFluid
-          }
-        }
-      }
       page2: file(name: { eq: "robert-bock" }) {
         childImageSharp {
           fluid(maxWidth: 1200) {
@@ -309,16 +286,19 @@ const Landing: React.FC<Props> = (props: Props) => {
           }
         }
       }
-      page3: file(name: { eq: "rodion-kutsaev" }) {
+      page3: file(name: { eq: "piotr-chrobot" }) {
         childImageSharp {
-          fluid(maxWidth: 1200) {
+          fluid(maxWidth: 1200, grayscale: false) {
             ...GatsbyImageSharpFluid
           }
         }
       }
-      page4: file(name: { eq: "kumiko-shimizu" }) {
+      page4: file(name: { eq: "matteo-vistocco" }) {
         childImageSharp {
-          fluid(maxWidth: 1200) {
+          fluid(
+            maxWidth: 1200
+            duotone: { highlight: "#a783d2", shadow: "#2e69a2" }
+          ) {
             ...GatsbyImageSharpFluid
           }
         }
@@ -330,48 +310,42 @@ const Landing: React.FC<Props> = (props: Props) => {
       }
     }
   `)
-  const [page, setPage] = useLocalStorageState('landingPageSection', 0)
+  const [page, setPage] = useState(0)
+
+  const bgImages = [
+    [
+      `linear-gradient(${theme.palette.primary.main}, ${theme.palette.primary.main})`,
+    ],
+    data.page2.childImageSharp.fluid,
+    data.page3.childImageSharp.fluid,
+    data.page4.childImageSharp.fluid,
+  ]
+
+  const bgTransitions = useTransition(page, (v) => v, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+  })
 
   const fadeTransitions = useTransition(page !== 0, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
-  })
-  const [fadeColorSpring, setFadeColor] = useSpring(() => ({
-    opacity: 1,
-    background: theme.palette.primary.main,
-    backgroundImage: 'none',
     config: rsConfig.slow,
-  }))
-
-  const pageColorMap: string[] = useMemo(
-    () => [
-      theme.palette.primary.main,
-      theme.palette.common.black,
-      theme.palette.primary.dark,
-      theme.palette.background.default,
-    ],
-    [
-      theme.palette.primary.main,
-      theme.palette.common.black,
-      theme.palette.primary.dark,
-      theme.palette.background.default,
-    ]
-  )
+  })
 
   const throttledSetPage = useDeepCompareCallback(
     debounce(
       (page: number) => {
-        setFadeColor({ background: pageColorMap[page] })
         setPage(page)
       },
-      500,
+      400,
       {
         leading: true,
         trailing: false,
       }
     ),
-    [page, setPage, setFadeColor, pageColorMap]
+    [page, setPage]
   )
 
   const onScroll = useDeepCompareCallback(
@@ -386,51 +360,36 @@ const Landing: React.FC<Props> = (props: Props) => {
     [throttledSetPage, page]
   )
 
-  const onSwitch = useDeepCompareCallback(
-    (page, stage) => {
-      const pageNumber = +R.compose<number, string, string[], string>(
-        R.head,
-        R.split('.'),
-        R.toString
-      )(page)
-      const percentOfPageChange = +R.compose(
-        R.join(''),
-        R.prepend('.'),
-        R.last,
-        R.split('.'),
-        R.toString
-      )(page)
-
-      if (stage === 'end') {
-        return setFadeColor({
-          background: pageColorMap[pageNumber],
-          opacity: 1,
-        })
-      }
-      setFadeColor({
-        opacity: 1 - percentOfPageChange,
-        background: pageColorMap[pageNumber],
-      })
-    },
-    [setFadeColor, pageColorMap]
-  )
-
-  useEffect(() => {
-    setFadeColor({ background: pageColorMap[page] })
-  }, [theme.palette.type])
-
   return (
-    <animated.section
-      className={classes.wrapper}
-      style={{
-        background: fadeColorSpring.background.interpolate((v) =>
-          page === 2
-            ? `radial-gradient(circle farthest-corner at 50% 70%, ${theme.palette.secondary.light}, ${theme.palette.primary.dark} 80%)`
-            : v
-        ),
-        opacity: fadeColorSpring.opacity.interpolate([0, 1], [0.5, 1]),
-      }}
-    >
+    <section className={classes.wrapper}>
+      {bgTransitions.map(({ item, key, props }) => {
+        const image = bgImages[item]
+        return (
+          <animated.div
+            key={key}
+            style={{
+              ...props,
+              zIndex: -1,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          >
+            <BackgroundImage
+              fluid={image}
+              className={clsx(classes.bgImage, `page${page + 1}`)}
+              style={{ width: '100%', height: '100%' }}
+              backgroundColor={theme.palette.background.default}
+              Tag="section"
+              alt="Background Image"
+              durationFadeIn={200}
+              critical
+            />
+          </animated.div>
+        )
+      })}
       {fadeTransitions.map(
         ({ item, key, props }) =>
           item && (
@@ -450,15 +409,43 @@ const Landing: React.FC<Props> = (props: Props) => {
             </animated.div>
           )
       )}
-
+      {fadeTransitions.map(
+        ({ item, key, props }) =>
+          item && (
+            <animated.div
+              key={key}
+              className={clsx(classes.dots, `page${page + 1}`)}
+              style={props}
+            >
+              {[...Array(pages.length + 1)].map((_, i) => (
+                <IconButton key={i} onClick={() => throttledSetPage(i)}>
+                  <Icon
+                    path={
+                      i === page
+                        ? mdiCheckboxBlankCircle
+                        : mdiCheckboxBlankCircleOutline
+                    }
+                    size={0.75}
+                  />
+                </IconButton>
+              ))}
+            </animated.div>
+          )
+      )}
+      \
       <BindKeyboardSwipeableViews
+        springConfig={{
+          delay: '0s',
+          duration: '0.8s',
+          easeFunction: 'ease',
+        }}
         axis="y"
         containerStyle={{ height: '100%', width: '100%' }}
         slideStyle={{ height: '100%', width: '100%' }}
         style={{ height: '100%', width: '100%' }}
         index={page}
         onChangeIndex={(page) => {
-          setFadeColor({ background: pageColorMap[page], opacity: 1 })
+          // setFadeColor({ background: pageColorMap[page], opacity: 1 })
           setPage(page)
         }}
         onTouchStart={(e) => {
@@ -476,12 +463,10 @@ const Landing: React.FC<Props> = (props: Props) => {
         }}
         onWheel={onScroll}
         threshold={1}
-        enableMouseEvents
-        onSwitching={onSwitch}
       >
         <section className={classes.hero}>
           <img
-            src={darkMode ? titleSvg : title2Svg}
+            src={titleSvg}
             alt={data.site.siteMetadata.title}
             className={classes.title}
           />
@@ -514,39 +499,15 @@ const Landing: React.FC<Props> = (props: Props) => {
               >
                 {pd.text}
               </Typography>
-              <Img
+              {/* <Img
                 fluid={data[`page${i + 2}`].childImageSharp.fluid}
                 className={clsx(classes.pageImage, `page${i + 2}`)}
-              />
+              /> */}
             </div>
           </section>
         ))}
       </BindKeyboardSwipeableViews>
-
-      {fadeTransitions.map(
-        ({ item, key, props }) =>
-          item && (
-            <animated.div
-              key={key}
-              className={clsx(classes.dots, `page${page + 1}`)}
-              style={props}
-            >
-              {[...Array(pages.length + 1)].map((_, i) => (
-                <IconButton key={i} onClick={() => throttledSetPage(i)}>
-                  <Icon
-                    path={
-                      i === page
-                        ? mdiCheckboxBlankCircle
-                        : mdiCheckboxBlankCircleOutline
-                    }
-                    size={0.75}
-                  />
-                </IconButton>
-              ))}
-            </animated.div>
-          )
-      )}
-    </animated.section>
+    </section>
   )
 }
 
