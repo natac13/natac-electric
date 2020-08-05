@@ -1,11 +1,7 @@
 import base from './base'
 import merge from 'lodash/merge'
-export const fontFamilySerif = [
-  'Merriweather',
-  'Times New Roman',
-  'serif',
-].join(',')
 
+export { fontFamilySerif } from './base'
 import { lightPalette, darkPalette } from './demo'
 
 export const lightTheme = merge(lightPalette, base)

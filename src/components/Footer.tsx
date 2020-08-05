@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
               <LinkListItem to="/about/#team" title="Team" />
               <LinkListItem to="/about/#history" title="History" />
               <LinkListItem to="/contact" title="Contact Us" />
-              <LinkListItem to="/locations" title="Locations" />
+              <LinkListItem to="/about/#locations" title="Locations" />
             </List>
           </section>
           <section className={classes.section}>

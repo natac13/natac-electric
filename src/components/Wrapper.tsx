@@ -5,6 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { lightTheme, darkTheme } from '../themes'
 import { CustomThemeProvider } from '../themes/themeContext'
 import useDarkMode from 'use-dark-mode'
+import SnackbarProviderComponent from './SnackbarProvider'
 
 interface Props {
   children: React.ReactNode
@@ -20,12 +21,14 @@ const Wrapper: React.FC<Props> = (props: Props) => {
 
   return (
     <ThemeProvider theme={createdTheme}>
-      <CssBaseline />
-      <CustomThemeProvider
-        value={{ setDarkMode: darkMode.toggle, darkMode: prefersDarkMode }}
-      >
-        {props.children}
-      </CustomThemeProvider>
+      <SnackbarProviderComponent>
+        <CssBaseline />
+        <CustomThemeProvider
+          value={{ setDarkMode: darkMode.toggle, darkMode: prefersDarkMode }}
+        >
+          {props.children}
+        </CustomThemeProvider>
+      </SnackbarProviderComponent>
     </ThemeProvider>
   )
 }

@@ -56,7 +56,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-nprogress`,
       options: {
-        color: `#663399`,
+        color: `#4297e8`,
         showSpinner: false,
       },
     },
@@ -75,6 +75,12 @@ module.exports = {
     `gatsby-plugin-ramda`,
     `gatsby-plugin-react-helmet`,
     {
+      resolve: `gatsby-transformer-yaml`,
+      // options: {
+      //   typeName: ({ node }) => node.name,
+      // },
+    },
+    {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `assets`,
@@ -89,10 +95,10 @@ module.exports = {
         name: `Natac Electric`,
         short_name: `Natac Electric`,
         start_url: `/`,
-        background_color: `#663399`,
-        theme_color: `#663399`,
+        background_color: `#4297e8`,
+        theme_color: `#4297e8`,
         display: `minimal-ui`,
-        // icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+        icon: `src/assets/images/logoBlack.png`, // This path is relative to the root of the site.
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality

@@ -1,6 +1,13 @@
-import { Hidden, List, ListItem, Switch, Typography } from '@material-ui/core'
+import {
+  Button as MuiButton,
+  Hidden,
+  List,
+  ListItem,
+  Switch,
+  Typography,
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { Button, Link } from 'gatsby-material-ui-components'
+import { Link } from 'gatsby-material-ui-components'
 import React, { useCallback, useContext } from 'react'
 import { animated, SetUpdateFn, useSpring } from 'react-spring'
 import ThemeContext from '../themes/themeContext'
@@ -8,21 +15,24 @@ import useIsMobile from '../hooks/useIsMobile'
 import useIsDesktop from '../hooks/useIsDesktop'
 import { fontFamilySerif } from '../themes'
 import clsx from 'clsx'
+import useHover, { HoverOptions } from '../hooks/useHover'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    overflow: 'hidden',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
     position: 'fixed',
     top: 0,
     width: '100%',
     background: theme.palette.background.default,
     borderBottom: `1px solid ${theme.palette.common.black}`,
+    zIndex: theme.zIndex.appBar,
   },
   nav: {
     display: 'grid',
     gridTemplateColumns: '1fr',
     placeItems: 'center center',
-    padding: theme.spacing(16, 5, 0),
+    padding: theme.spacing(16, 5, 4),
     [`${theme.breakpoints.up('sm')}`]: {
       // padding: theme.spacing(16, 5, 0),
       padding: theme.spacing(14, 10, 0),
@@ -134,7 +144,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: `${theme.palette.common.white} !important` as string,
     color: theme.palette.common.black,
     padding: theme.spacing(0.4, 1.6),
-    zIndex: theme.zIndex.appBar,
+    zIndex: theme.zIndex.tooltip,
     fontSize: theme.typography.h4.fontSize,
     '&:focus, &:hover': {
       backgroundColor: `${theme.palette.primary.dark} !important` as string,
@@ -158,6 +168,7 @@ const useStyles = makeStyles((theme) => ({
 interface Props {
   path: string
   setMainSpring: SetUpdateFn<React.CSSProperties>
+  setFrameSpring: SetUpdateFn<React.CSSProperties>
 }
 
 const links = [
@@ -198,27 +209,82 @@ const Navbar: React.FC<Props> = (props: Props) => {
   const isMobile = useIsMobile()
   const isDesktop = useIsDesktop()
   const { darkMode, setDarkMode } = useContext(ThemeContext)
-  const { setMainSpring } = props
-
+  const { setMainSpring, setFrameSpring } = props
   const [navSpring, setNavSpring] = useSpring(() => ({
     height: '0vh',
-    zIndex: -1,
   }))
+
+  const hoverOptions: HoverOptions = {
+    onMouseOver: () => {
+      if (!isDesktop) {
+        return
+      }
+      if (navSpring.height.getValue() === '0vh' && isDesktop) {
+        setFrameSpring({
+          borderRightWidth: '60px',
+          borderLeftWidth: '60px',
+          borderTopWidth: '60px',
+          borderBottomWidth: '60px',
+        })
+      }
+    },
+    onMouseOut: () => {
+      if (!isDesktop) {
+        return
+      }
+      if (navSpring.height.getValue() === '0vh') {
+        setFrameSpring({
+          borderRightWidth: '0px',
+          borderLeftWidth: '0px',
+          borderTopWidth: '0px',
+          borderBottomWidth: '0px',
+        })
+      } else {
+        setFrameSpring({
+          borderTopWidth: '0px',
+        })
+      }
+    },
+  }
+  const [hoverRef2] = useHover(hoverOptions)
+  const [hoverRef] = useHover(hoverOptions)
+
   const toggleNavSpring = useCallback(() => {
     if (navSpring.height.getValue() === '0vh') {
       setNavSpring({
-        height: isMobile ? '95vh' : isDesktop ? '50vh' : '60vh',
-        zIndex: 10,
+        height: isMobile ? '80vh' : isDesktop ? '55vh' : '60vh',
       })
       setMainSpring({
-        marginTop: isMobile ? '95vh' : isDesktop ? '50vh' : '60vh',
-        transform: 'scale(0.83)',
+        marginTop: isMobile ? '80vh' : isDesktop ? '55vh' : '60vh',
       })
+      if (isDesktop) {
+        setFrameSpring({
+          borderRightWidth: '60px',
+          borderLeftWidth: '60px',
+          borderTopWidth: '0px',
+        })
+      }
     } else {
-      setNavSpring({ height: '0vh', zIndex: -1 })
-      setMainSpring({ marginTop: '0vh', transform: 'scale(1)' })
+      setNavSpring({ height: '0vh' })
+      setMainSpring({
+        marginTop: '0vh',
+      })
+      if (isDesktop) {
+        setFrameSpring({
+          borderRightWidth: '0px',
+          borderLeftWidth: '0px',
+          borderBottomWidth: '0px',
+        })
+      }
     }
-  }, [navSpring.height, setNavSpring, setMainSpring, isMobile, isDesktop])
+  }, [
+    navSpring.height,
+    setNavSpring,
+    setMainSpring,
+    isMobile,
+    isDesktop,
+    setFrameSpring,
+  ])
 
   return (
     <div>
@@ -261,15 +327,17 @@ const Navbar: React.FC<Props> = (props: Props) => {
             tabIndex={-1}
             onClick={toggleNavSpring}
             className={classes.sectionBtn}
+            ref={hoverRef2}
           ></button>
         </Hidden>
-        <Button
+        <MuiButton
           onClick={toggleNavSpring}
           className={classes.letterBtn}
           aria-label="Navigation Toggle"
+          ref={hoverRef}
         >
           NE
-        </Button>
+        </MuiButton>
       </div>
     </div>
   )

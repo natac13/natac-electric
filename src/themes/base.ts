@@ -2,6 +2,12 @@
 //   fontFamily: ['Oswald', 'sans-serif'].join(','),
 // }
 
+export const fontFamilySerif = [
+  'Merriweather',
+  'Times New Roman',
+  'serif',
+].join(',')
+
 export default {
   overrides: {
     MuiListItemIcon: {
@@ -44,6 +50,10 @@ export default {
     // subtitle2: {
     //   // ...headerFont,
     // },
+    body1: {
+      fontFamily: fontFamilySerif,
+      lineHeight: 1.8,
+    },
   },
   palette: {
     contrastThreshold: 4.5,

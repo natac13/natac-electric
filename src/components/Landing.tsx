@@ -11,13 +11,15 @@ import BackgroundImage from 'gatsby-background-image'
 import { IconButton, Link } from 'gatsby-material-ui-components'
 import debounce from 'lodash/debounce'
 import R from 'ramda'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { animated, config as rsConfig, useTransition } from 'react-spring'
 import SwipeableViews from 'react-swipeable-views'
 import { bindKeyboard } from 'react-swipeable-views-utils'
 import { useDeepCompareCallback } from 'use-deep-compare'
 import titleSvg from '../assets/svg/title.svg'
+import title2Svg from '../assets/svg/title2.svg'
 import { fontFamilySerif } from '../themes'
+import ThemeContext from '../themes/themeContext'
 
 const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews)
 
@@ -27,8 +29,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     width: '100vw',
     overflow: 'hidden',
-    marginBottom: theme.spacing(100),
-    zIndex: -1,
+    // zIndex: -1,
   },
   hero: {
     background: 'transparent',
@@ -72,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   intro: {
-    color: `rgba(0, 0, 0, .87)`,
+    color: theme.palette.getContrastText(theme.palette.text.primary),
     fontFamily: fontFamilySerif,
     fontSize: theme.typography.h6.fontSize,
     position: 'absolute',
@@ -89,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   verticalBar: {
-    color: `rgba(0, 0, 0, .87)`,
+    color: theme.palette.getContrastText(theme.palette.text.primary),
     position: 'absolute',
     bottom: theme.spacing(5),
     left: '50%',
@@ -201,20 +202,6 @@ const useStyles = makeStyles((theme) => ({
       fontSize: theme.typography.h6.fontSize,
     },
   },
-  pageImage: {
-    width: '100%',
-    margin: `auto auto 4vh`,
-    transformOrigin: 'bottom',
-    filter: 'brightness(0.9)',
-    objectPosition: 'bottom',
-
-    [`${theme.breakpoints.up('md')}`]: {
-      width: '60%',
-    },
-    [`${theme.breakpoints.up('lg')}`]: {
-      width: '50%',
-    },
-  },
   dots: {
     position: 'fixed',
     top: '50%',
@@ -277,23 +264,24 @@ const pages = [
 const Landing: React.FC<Props> = (props: Props) => {
   const classes = useStyles()
   const theme = useTheme()
+  const { darkMode } = useContext(ThemeContext)
   const data = useStaticQuery(graphql`
     query {
-      page2: file(name: { eq: "robert-bock" }) {
+      page2: file(name: { eq: "city5" }) {
         childImageSharp {
           fluid(maxWidth: 1200) {
             ...GatsbyImageSharpFluid
           }
         }
       }
-      page3: file(name: { eq: "piotr-chrobot" }) {
+      page3: file(name: { eq: "city4" }) {
         childImageSharp {
           fluid(maxWidth: 1200, grayscale: false) {
             ...GatsbyImageSharpFluid
           }
         }
       }
-      page4: file(name: { eq: "matteo-vistocco" }) {
+      page4: file(name: { eq: "team1" }) {
         childImageSharp {
           fluid(
             maxWidth: 1200
@@ -466,7 +454,7 @@ const Landing: React.FC<Props> = (props: Props) => {
       >
         <section className={classes.hero}>
           <img
-            src={titleSvg}
+            src={darkMode ? titleSvg : title2Svg}
             alt={data.site.siteMetadata.title}
             className={classes.title}
           />
@@ -499,10 +487,6 @@ const Landing: React.FC<Props> = (props: Props) => {
               >
                 {pd.text}
               </Typography>
-              {/* <Img
-                fluid={data[`page${i + 2}`].childImageSharp.fluid}
-                className={clsx(classes.pageImage, `page${i + 2}`)}
-              /> */}
             </div>
           </section>
         ))}
