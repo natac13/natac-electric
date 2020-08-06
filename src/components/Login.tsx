@@ -76,8 +76,6 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
           }}
         ></AmplifySignIn>
         {/* <AmplifyGreetings logo={}></AmplifyGreetings> */}
-
-        {/* <AmplifySignOut buttonText="Logout" /> */}
       </AmplifyAuthenticator>
     </section>
   )

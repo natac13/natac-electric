@@ -18,8 +18,8 @@ interface Data {
 }
 
 export default (): Site => {
-  const data = useStaticQuery<Data>(graphql`
-    {
+  const data = useStaticQuery(graphql`
+    query {
       site {
         siteMetadata {
           title

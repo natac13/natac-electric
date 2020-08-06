@@ -167,7 +167,7 @@ const Contact: React.FC<PageProps & Data> = (props: PageProps & Data) => {
 
   // const resolver = yupResolver()
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     // resolver,
@@ -295,7 +295,7 @@ const Contact: React.FC<PageProps & Data> = (props: PageProps & Data) => {
                   margin="dense"
                   inputRef={register({ required: true })}
                 />
-                <TextField
+                {/* <TextField
                   id="contact-form-service"
                   name="service"
                   label="Service Type"
@@ -310,7 +310,7 @@ const Contact: React.FC<PageProps & Data> = (props: PageProps & Data) => {
                   <MenuItem value={'Residential'}>Residential</MenuItem>
                   <MenuItem value={'Commercial'}>Commercial</MenuItem>
                   <MenuItem value={'Industrial'}>Industrial</MenuItem>
-                </TextField>
+                </TextField> */}
                 <TextField
                   id="contact-form-description"
                   name="description"

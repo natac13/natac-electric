@@ -105,7 +105,7 @@ const Location: React.FC<Props & Data> = (props: Props & Data) => {
       <section className={classes.root}>
         <BackgroundImage
           fluid={data.bgImage.childImageSharp.fluid}
-          alt={name}
+          alt={data.bgImage.name}
           style={{
             width: '100vw',
             height: '80vh',
