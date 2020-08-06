@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, useLocation } from '@reach/router'
+import { Router } from '@reach/router'
 import Layout from '../components/Layout'
 
 import Login from '../components/Login'
@@ -8,8 +8,8 @@ import Home from '../components/Home'
 import PrivateRoute from '../components/PrivateRoute'
 
 const App = () => {
-  const location = useLocation()
-  console.log(location)
+  // const location = useLocation()
+  // console.log(location)
   return (
     <Layout pathname="/app">
       <Router>

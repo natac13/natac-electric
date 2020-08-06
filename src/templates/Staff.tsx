@@ -104,7 +104,7 @@ const Staff: React.FC<Props & PageProps & Data> = (
   props: Props & PageProps & Data
 ) => {
   const classes = useStyles()
-  console.log(props)
+  // console.log(props)
   const { pageContext, path, data } = props
   const { employmentStart, name, position, email, description } = pageContext
   return (

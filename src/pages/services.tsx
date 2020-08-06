@@ -240,10 +240,10 @@ const Services: React.FC<Props> = (props: Props) => {
               </Typography>
               <Typography variant="body1">
                 When it comes to Industrial, Commercial and Institutional
-                electrical services we provide everything from small projects
-                (including maintenance and design-build) to large construction
-                projects. Regardless of size our goal is to safely deliver a
-                quality product on time and on budget
+                electrical services wt lorem voluptua stet est clita amet sit
+                ipsum et eos. Vero no dolor eos consetetur sed, et diam dolore
+                ipsum ea no erat sadipscing sit duo. No clita eos no ut, sea est
+                et magna nonumy labore est at.
               </Typography>
               <Typography variant="body1">
                 Et lorem voluptua stet est clita amet sit ipsum et eos. Vero no
@@ -285,10 +285,11 @@ const Services: React.FC<Props> = (props: Props) => {
                 Panel Building Service.
               </Typography>
               <Typography variant="body1">
-                We have a long history of panel building at Ferguson Electric.We
-                both design and build in house. Quality of workmanship will be
-                exceptional and panel(s) will receive approval from ESA's Field
-                Evaluation department.
+                We have a long history of panel building at s ea tempor takimata
+                takimata erat, accusam et duo eos kasd et. Ea sit vero gubergren
+                ea at lorem no, ea sea clita et diam diam. Ipsum dolores accusam
+                sadipscing ipsum et dolores, labore dolores vero elitr invidunt
+                dolores, sea.
               </Typography>
               <Typography variant="body1">
                 Eos ea tempor takimata takimata erat, accusam et duo eos kasd

@@ -103,7 +103,7 @@ interface Data {
 const PureTeamCards: React.FC<Props & Data> = (props: Props & Data) => {
   const classes = useStyles()
   const { data } = props
-  console.log(data)
+  // console.log(data)
 
   return (
     <section className={classes.root}>
