@@ -10,15 +10,15 @@ export const lightPalette: Record<string, Partial<Palette>> = {
       contrastText: '#fff',
     },
     secondary: {
-      main: '#887400',
-      light: '#9f8f33',
-      dark: '#5f5100',
+      main: '#5a308e',
+      light: '#3e2163',
+      dark: '#7b59a4',
       contrastText: '#fff',
     },
-    background: {
-      default: '#fcfcfc',
-      paper: '#ffffff',
-    },
+    // background: {
+    //   default: '#fcfcfc',
+    //   paper: '#ffffff',
+    // },
   },
 }
 
@@ -26,16 +26,16 @@ export const darkPalette: Record<string, Partial<Palette>> = {
   palette: {
     type: 'dark',
     primary: {
-      main: '#2a85db',
-      light: '#549de2',
-      dark: '#1d5d99',
-      contrastText: '#1a1a1a',
+      main: '#4297e8',
+      light: '#67abec',
+      dark: '#2e69a2',
+      contrastText: '#fff',
     },
     secondary: {
-      main: '#B29700',
-      light: '#c1ab33',
-      dark: '#7c6900',
-      contrastText: '#1a1a1a',
+      main: '#a783d2',
+      light: '#b89bdb',
+      dark: '#745b93',
+      contrastText: '#fff',
     },
     background: {
       default: '#1a1a1a',

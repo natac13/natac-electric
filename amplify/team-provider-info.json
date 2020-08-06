@@ -1,0 +1,20 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-natacelectric-dev-110203-authRole",
+            "UnauthRoleArn": "arn:aws:iam::838376023699:role/amplify-natacelectric-dev-110203-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::838376023699:role/amplify-natacelectric-dev-110203-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-natacelectric-dev-110203-deployment",
+            "UnauthRoleName": "amplify-natacelectric-dev-110203-unauthRole",
+            "StackName": "amplify-natacelectric-dev-110203",
+            "StackId": "arn:aws:cloudformation:us-east-1:838376023699:stack/amplify-natacelectric-dev-110203/d88122f0-ce87-11ea-b5bc-0eb23bbe71c5",
+            "AmplifyAppId": "d2s0kiemwsxyez"
+        },
+        "categories": {
+            "auth": {
+                "natacelectric786675a7786675a7": {}
+            }
+        }
+    }
+}
