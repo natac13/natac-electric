@@ -8,11 +8,10 @@ import {
   List,
   ListItem,
   TextField,
-  MenuItem,
   Divider,
 } from '@material-ui/core'
 import BackgroundImage from 'gatsby-background-image'
-import { animated } from 'react-spring/renderprops-universal'
+import { animated } from 'react-spring'
 import { FluidObject } from 'gatsby-image'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, Button } from 'gatsby-material-ui-components'
