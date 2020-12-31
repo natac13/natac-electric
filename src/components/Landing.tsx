@@ -146,7 +146,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.h3.fontSize,
     fontWeight: 700,
     color: theme.palette.text.primary,
-    marginTop: '1vh',
+    marginTop: theme.spacing(4),
     marginRight: 'auto',
     marginBottom: '1vh',
     marginLeft: '6vw',

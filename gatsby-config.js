@@ -37,19 +37,11 @@ module.exports = {
       options: { prefixes: [`/app/*`] },
     },
     {
-      resolve: `gatsby-plugin-prefetch-google-fonts`,
+      resolve: `gatsby-plugin-google-fonts`,
       options: {
         fonts: [
-          {
-            family: `Roboto`,
-            subsets: [`latin`],
-            variants: [`300`, `400`, `400i`, `500`, `700`, `700i`],
-          },
-          {
-            family: `Merriweather`,
-            subsets: [`latin`],
-            variants: [`400`, `400i`, `700`, `900`],
-          },
+          `Roboto\:300,400,400i,500,700,700i`,
+          `Merriweather\:400,400i,700,900`,
         ],
       },
     },
