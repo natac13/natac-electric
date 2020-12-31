@@ -420,7 +420,6 @@ const Landing: React.FC<Props> = (props: Props) => {
             </animated.div>
           )
       )}
-      \
       <BindKeyboardSwipeableViews
         springConfig={{
           delay: '0s',
