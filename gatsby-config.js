@@ -2,6 +2,7 @@
 const package = require('./package.json')
 
 module.exports = {
+  pathPrefix: `/natac-electric`
   siteMetadata: {
     title: `Natac Electric`,
     description: `Example of an website landing page for an electrical company. Founded in 2020. Through hard labor and no retirement the work will get done.`,
